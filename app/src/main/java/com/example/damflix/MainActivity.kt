@@ -21,22 +21,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.style.LineHeightStyle
 import com.example.damflix.ui.theme.DAMFlixTheme
 
 class MainActivity : ComponentActivity() {
@@ -91,14 +86,19 @@ fun Pantalla() {
                 containerColor = colorResource(id = R.color.purple_500),
                 contentColor = colorResource(id = R.color.white)
             ) {
-                IconButton(onClick = {}) {
-                    Image(
-                        painter = painterResource(id = R.drawable.perfil),
-                        contentDescription = "irPerfil",
-                        modifier = Modifier
-                            .padding(all = 5.dp)
-                            .clip(CircleShape)
-                    )
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    IconButton(onClick = {}) {
+                        Image(
+                            painter = painterResource(id = R.drawable.perfil),
+                            contentDescription = "irPerfil",
+                            modifier = Modifier
+                                .size(35.dp)
+                                .clip(CircleShape)
+                        )
+                    }
                 }
             }
         }
