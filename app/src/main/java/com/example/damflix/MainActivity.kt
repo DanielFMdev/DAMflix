@@ -21,11 +21,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.colorResource
@@ -47,18 +54,18 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-var customModifier = Modifier.padding(all = 15.dp)
-
 @Composable
 fun Pantalla() {
     Scaffold(
 
         topBar = {
             CenterAlignedTopAppBar(
+                
                 colors = topAppBarColors(
                     containerColor = colorResource(id = R.color.purple_500),
                     titleContentColor = colorResource(id = R.color.white)
                 ),
+
                 title = {
                     Text(
                         stringResource(id = R.string.app_name)
@@ -73,6 +80,7 @@ fun Pantalla() {
                             .padding(20.dp)
                             .size(40.dp)
                             .clip(CircleShape)
+                            .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
                     )
                 }
             )
@@ -100,24 +108,47 @@ fun Pantalla() {
             modifier = Modifier
                 .padding(innerPadding)
 
-
         ) {
-            Text(
-                modifier = customModifier,
-                text = "Usuario: " + stringResource(id = R.string.userName)
+
+            Image(
+                painter = painterResource(id = R.drawable.avatar),
+                contentDescription = "Perfil",
+                modifier = Modifier
+                    .padding(all = 30.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
             )
             Text(
-                modifier = customModifier,
-                text = "Rol: " + stringResource(id = R.string.rol)
+                modifier = Modifier
+                    .padding(horizontal = 68.dp),
+                text = stringResource(id = R.string.userName),
+                style = MaterialTheme.typography.headlineSmall
             )
             Text(
-                modifier = customModifier,
-                text = "Peliculas vistas: " + stringResource(id = R.string.peliculas)
+                modifier = Modifier
+                    .padding(horizontal = 130.dp),
+                text = stringResource(id = R.string.rol),
+                style = MaterialTheme.typography.bodyMedium
             )
-            Text(
-                modifier = customModifier,
-                text = "Nº de reseñas: " + stringResource(id = R.string.reseñas)
-            )
+
+            Row(
+                modifier = Modifier
+                    .padding(innerPadding)
+            ) {
+                Text(
+                    text = "Peliculas vistas: " + stringResource(id = R.string.peliculas),
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp)
+                )
+
+                Text(
+                    text = "Nº de reseñas: " + stringResource(id = R.string.reseñas),
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp)
+                )
+            }
         }
     }
 }
