@@ -4,4 +4,12 @@
     <string name="userName">Daniel Flores Medina</string>
     <string name="rol">Crítico de Cine</string>
     <string name="reseñas">14</string>
+
+    <string name="tituloFormulario">Registro de las peliculas</string>
+    <string name="tituloPelicula">Título</string>
+    <string name="directorPelicula">Director/a</string>
+    <string name="anioPelicula">Año de la película</string>
+    <string name="peliculaVista">Pelicula vista</string>
+    <string name="btnGuardar">Guardar película</string>
+    <string name="btnVolver">Volver</string>
 </resources>
