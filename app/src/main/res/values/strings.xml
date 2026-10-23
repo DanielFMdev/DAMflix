@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">DAMFlix</string>
+    <string name="catalogoScreen">Catálogo</string>
+    <string name="formularioScreen">Formulario</string>
     <string name="peliculas">15</string>
     <string name="userName">Daniel Flores Medina</string>
     <string name="rol">Crítico de Cine</string>
