@@ -3,10 +3,12 @@ package com.example.damflix
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -35,7 +37,9 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
+    val navController = rememberNavController()
     Scaffold(
+
         topBar = {
             CenterAlignedTopAppBar(
 
@@ -69,6 +73,8 @@ fun MainScreen() {
 
                 containerColor = colorResource(id = R.color.purple_500),
                 contentColor = colorResource(id = R.color.white)
+
+
             ) {
                 Row(
                     modifier = Modifier
@@ -78,7 +84,7 @@ fun MainScreen() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = { navController.navigate(Ruta.Main.path) }) {
                         Icon(
                             imageVector = Icons.Default.Home,
                             contentDescription = "Home",
@@ -88,7 +94,7 @@ fun MainScreen() {
                         )
                     }
 
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = { navController.navigate(Ruta.Formulario.path) }) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = "AñadirPelicula",
@@ -98,7 +104,7 @@ fun MainScreen() {
                         )
                     }
 
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = { navController.navigate(Ruta.Catalogo.path) }) {
                         Icon(
                             imageVector = Icons.Default.List,
                             contentDescription = "ListaPeliculas",
@@ -112,52 +118,74 @@ fun MainScreen() {
         }
 
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-
+        NavHost(
+            navController = navController,
+            startDestination = Ruta.Main.path,
+            modifier = Modifier.padding(innerPadding)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.avatar),
-                contentDescription = "Perfil",
-                modifier = Modifier
-                    .padding(vertical = 20.dp)
-                    .size(100.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
-            )
-
-            Text(
-                modifier = Modifier
-                    .padding(horizontal = 68.dp),
-                text = stringResource(id = R.string.userName),
-                style = MaterialTheme.typography.headlineSmall
-            )
-
-            Text(
-                modifier = Modifier
-                    .padding(horizontal = 130.dp),
-                text = stringResource(id = R.string.rol),
-                style = MaterialTheme.typography.bodyMedium
-            )
-
-            Row(
-                modifier = Modifier
-                    .padding(innerPadding)
-            ) {
-
-                Text(
-                    text = "Vistas: " + stringResource(id = R.string.peliculas),
-                    modifier = Modifier
-                        .padding(horizontal = 10.dp)
-                )
-
-                Text(
-                    text = "Reseñas: " + stringResource(id = R.string.reseñas),
-                )
+            composable(Ruta.Main.path) {
+                PerfilScreen()
             }
+            composable(Ruta.Formulario.path) {
+                FormularioScreen()
+            }
+            composable(Ruta.Catalogo.path) {
+                CatalogoScreen()
+            }
+        }
+    }
+}
+
+@Composable
+private fun PerfilScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.avatar),
+            contentDescription = "Perfil",
+            modifier = Modifier
+                .padding(top = 100.dp, bottom = 20.dp)
+                .size(100.dp)
+                .clip(CircleShape)
+                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+        )
+
+        Text(
+            modifier = Modifier
+                .padding(bottom = 10.dp),
+            text = stringResource(id = R.string.userName),
+            style = MaterialTheme.typography.headlineSmall
+        )
+
+        Text(
+            modifier = Modifier
+                .padding(bottom = 50.dp),
+            text = stringResource(id = R.string.rol),
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 25.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Text(
+                text = "Vistas: " + stringResource(id = R.string.peliculas),
+                modifier = Modifier
+                    .padding(start = 30.dp)
+            )
+
+            Text(
+                text = "Reseñas: " + stringResource(id = R.string.reseñas),
+                modifier = Modifier
+                    .padding(end = 30.dp)
+            )
         }
     }
 }
