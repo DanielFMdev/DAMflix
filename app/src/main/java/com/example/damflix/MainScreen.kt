@@ -26,6 +26,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +40,19 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+
+    val peliculas = remember {
+        mutableStateListOf(
+            Pelicula(
+                id = 1,
+                titulo = "Pelicula",
+                director = "Director",
+                anio = 2023,
+                esFavorita = false
+            )
+        )
+    }
+
     Scaffold(
 
         topBar = {
@@ -127,10 +142,28 @@ fun MainScreen() {
                 PerfilScreen()
             }
             composable(Ruta.Formulario.path) {
-                FormularioScreen()
+                FormularioScreen(
+                    onGuardarPelicula = { nuevaPelicula ->
+                        peliculas.add(nuevaPelicula)
+                        navController.navigate(Ruta.Catalogo.path)
+                    },
+                    onVolver = {
+                        navController.navigate(Ruta.Main.path)
+                    }
+                )
             }
             composable(Ruta.Catalogo.path) {
-                CatalogoScreen()
+                CatalogoScreen(
+                    peliculas = peliculas,
+                    onToggleFavorito = { peliculaId ->
+                        val index = peliculas.indexOfFirst { it.id == peliculaId }
+                        if (index != -1) {
+                            peliculas[index] = peliculas[index].copy(
+                                esFavorita = !peliculas[index].esFavorita
+                            )
+                        }
+                    }
+                )
             }
         }
     }

@@ -5,19 +5,20 @@
 [![Jetpack Compose](https://img.shields.io/badge/UI-Jetpack%20Compose%20%2F%20Material3-4285F4.svg?style=flat&logo=jetpackcompose)](https://developer.android.com/jetpack/compose)
 [![Gradle](https://img.shields.io/badge/Gradle-9.x%20(Version%20Catalog)-02303A.svg?style=flat&logo=gradle)](https://gradle.org)
 
-**DAMFlix** es una aplicación móvil nativa para Android desarrollada con **Kotlin** y **Jetpack Compose** (Material Design 3). El proyecto forma parte del módulo de *Programación Multimedia y Dispositivos Móviles (PGL)* del Ciclo Formativo de Grado Superior en **Desarrollo de Aplicaciones Multiplataforma (2º DAM)**.
+**DAMFlix** es una aplicación móvil nativa para Android desarrollada con **Kotlin** y **Jetpack Compose** bajo los principios de **Material Design 3**. El proyecto forma parte de la actividad práctica del módulo de *Programación Multimedia y Dispositivos Móviles (PGL)* del Ciclo Formativo de Grado Superior en **Desarrollo de Aplicaciones Multiplataforma (2º DAM)**.
 
-La aplicación permite visualizar el perfil del usuario, su rol dentro de la comunidad cinéfila (como crítico de cine), así como estadísticas clave sobre películas vistas y reseñas publicadas.
+La aplicación ofrece una experiencia fluida de navegación entre el perfil del usuario, un catálogo interactivo de películas con gestión de favoritos y un formulario completo para registrar nuevas producciones.
 
 ---
 
-## 📌 Características Principales
+## 📌 Características Principales y Pantallas
 
-- 🎨 **Interfaz de Usuario Moderna:** Diseñada completamente de forma declarativa con **Jetpack Compose** y **Material Design 3**.
-- 👤 **Perfil de Usuario:** Muestra la información personal del usuario (`Usuario`, `Rol`), películas vistas y recuento total de reseñas realizas.
-- 🖼️ **Avatar y Elementos Gráficos:** Incorporación de avatares circulares en la barra superior (`CenterAlignedTopAppBar`) y en la barra de navegación inferior (`BottomAppBar`).
-- 📱 **Soporte Edge-to-Edge:** Experiencia inmersiva adaptada a las guías de diseño de Android actual.
-- ⚙️ **Arquitectura Limpia y Modularización de Dependencias:** Uso de **Gradle Version Catalog** (`libs.versions.toml`) y sintaxis Kotlin DSL (`build.gradle.kts`).
+- 🎨 **Interfaz Declarativa Moderna:** Desarrollada 100% con **Jetpack Compose** y **Material Design 3**, garantizando un diseño adaptativo y elegante.
+- 🔀 **Navegación Integrada (`Jetpack Navigation Compose`):** Sistema de navegación modular basado en una clase sellada (`Ruta`) que conecta de forma limpia las distintas pantallas de la app.
+- 👤 **Pantalla de Perfil (`PerfilScreen`):** Muestra el avatar del usuario, su nombre, rol dentro de la comunidad cinéfila y estadísticas clave (películas vistas y reseñas publicadas).
+- 🎞️ **Catálogo de Películas (`CatalogoScreen`):** Listado dinámico implementado con `LazyColumn` y tarjetas (`Card`) que permite visualizar el título, director, año de estreno y marcar/desmarcar películas como favoritas en tiempo real.
+- ✍️ **Formulario de Registro (`FormularioScreen`):** Pantalla interactiva con campos de texto (`OutlinedTextField`) para título, director y año, casilla de verificación para marcar si ha sido vista (`Checkbox`), y botones de acción.
+- 📱 **Soporte Edge-to-Edge:** Adaptación moderna a las guías de diseño de pantalla completa de Android.
 
 ---
 
@@ -27,9 +28,10 @@ La aplicación permite visualizar el perfil del usuario, su rol dentro de la com
 | :--- | :--- |
 | **Kotlin** | Lenguaje principal de desarrollo (`v2.2.10`) |
 | **Jetpack Compose** | Framework UI declarativo de Android con Material 3 (`BOM 2026.02.01`) |
+| **Navigation Compose** | Enrutamiento y navegación fluida entre composables (`androidx.navigation.compose`) |
 | **AndroidX Core KTX & Lifecycle** | Extensiones KTX para el ciclo de vida y componentes esenciales de Android |
-| **Material Design 3** | Componentes de UI (`Scaffold`, `CenterAlignedTopAppBar`, `BottomAppBar`, `Text`, `Image`) |
-| **Gradle Version Catalog** | Gestión centralizada y moderna de dependencias mediante `libs.versions.toml` |
+| **Material Design 3** | Componentes UI (`Scaffold`, `CenterAlignedTopAppBar`, `BottomAppBar`, `Card`, `Button`, `Checkbox`, `OutlinedTextField`) |
+| **Gradle Version Catalog** | Gestión centralizada de dependencias mediante `libs.versions.toml` y Kotlin DSL |
 
 ---
 
@@ -51,14 +53,22 @@ DAMFlix/
 │   └── src/
 │       ├── main/
 │       │   ├── java/com/example/damflix/
-│       │   │   ├── MainActivity.kt # Actividad principal y composables de la UI
-│       │   │   └── ui/theme/       # Definiciones de Tema, Colores y Tipografía (M3)
-│       │   ├── res/                # Recursos estáticos (Imágenes, Strings, Colores)
-│       │   └── AndroidManifest.xml # Manifiesto de la aplicación
+│       │   │   ├── MainActivity.kt      # Actividad principal de entrada
+│       │   │   ├── MainScreen.kt        # Contenedor principal (Scaffold, TopBar, BottomBar, Perfil)
+│       │   │   ├── CatalogoScreen.kt    # Pantalla de catálogo y listado de películas
+│       │   │   ├── FormularioScreen.kt  # Pantalla de registro de nuevas películas
+│       │   │   ├── NavClass.kt          # Definición de rutas de navegación (Sealed Class)
+│       │   │   ├── Pelicula.kt          # Modelo de datos de películas
+│       │   │   └── ui/theme/            # Tema, Colores y Tipografía (Material 3)
+│       │   │       ├── Color.kt
+│       │   │       ├── Theme.kt
+│       │   │       └── Type.kt
+│       │   ├── res/                     # Recursos estáticos (Imágenes, Strings, Colores)
+│       │   └── AndroidManifest.xml      # Manifiesto de la aplicación
 ├── gradle/
-│   └── libs.versions.toml          # Catálogo de versiones de dependencias
-├── build.gradle.kts                # Configuración raíz del proyecto
-└── README.md                       # Documentación del proyecto
+│   └── libs.versions.toml              # Catálogo de versiones de dependencias
+├── build.gradle.kts                    # Configuración raíz del proyecto
+└── README.md                           # Documentación del proyecto
 ```
 
 ---
@@ -102,4 +112,4 @@ DAMFlix/
 
 ## 📄 Licencia
 
-Este proyecto se distribuye bajo la licencia academica para uso didáctico y personal dentro del marco formativo del Grado Superior DAM.
+Este proyecto se distribuye bajo licencia académica para uso didáctico y personal dentro del marco formativo del Grado Superior DAM.

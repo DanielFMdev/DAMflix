@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
@@ -37,11 +38,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormularioScreen() {
+fun FormularioScreen(
+    onGuardarPelicula: (Pelicula) -> Unit,
+    onVolver: () -> Unit = {}
+) {
     var titulo by remember { mutableStateOf("") }
     var director by remember { mutableStateOf("") }
     var anio by remember { mutableStateOf("") }
@@ -66,7 +73,10 @@ fun FormularioScreen() {
                     onValueChange = {titulo = it},
                     label = { Text(text = stringResource(R.string.tituloPelicula)) },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        KeyboardCapitalization.Sentences
+                    )
                 )
 
                 OutlinedTextField(
@@ -74,7 +84,10 @@ fun FormularioScreen() {
                     onValueChange = { director = it },
                     label = { Text(text = stringResource(R.string.directorPelicula)) },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        KeyboardCapitalization.Words
+                    )
                 )
 
                 OutlinedTextField(
@@ -82,7 +95,10 @@ fun FormularioScreen() {
                     onValueChange = { anio = it },
                     label = { Text(text = stringResource(R.string.anioPelicula)) },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    )
                 )
 
                 Row(
@@ -97,7 +113,16 @@ fun FormularioScreen() {
                 }
 
                 Button(
-                    onClick = {  },
+                    onClick = {
+                        val nuevaPelicula = Pelicula(
+                            id = System.currentTimeMillis().toInt(),
+                            titulo = titulo,
+                            director = director,
+                            anio = anio.toIntOrNull() ?: 0,
+                            esFavorita = false
+                        )
+                        onGuardarPelicula(nuevaPelicula)
+                    },
                     enabled = titulo.isNotBlank() && director.isNotBlank(),
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -105,8 +130,7 @@ fun FormularioScreen() {
                 }
 
                 Button(
-                    onClick = {  },
-                    enabled = true,
+                    onClick = onVolver,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(text = stringResource(R.string.btnVolver))

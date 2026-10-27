@@ -42,28 +42,17 @@ import androidx.compose.ui.Alignment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CatalogoScreen() {
-    
-    val peliculas = remember { mutableStateListOf(
-        Pelicula(1, "Interstellar", "Christopher Nolan", 2014,  false),
-        Pelicula(2, "Blade", "Ridley Scott", 1998, false),
-        Pelicula(3, "Fast and Furious", "Justin Lin", 2001, false),
-    )}
-
+fun CatalogoScreen(
+    peliculas: List<Pelicula>,
+    onToggleFavorito: (Int) -> Unit
+) {
     Scaffold() { innerPadding ->
         Box(
             modifier = Modifier.padding(innerPadding)
         ) {
             ListaPeliculas(
                 peliculas = peliculas,
-                onToggleFavorito = { peliculaId ->
-                    val index = peliculas.indexOfFirst { it.id == peliculaId }
-                    if (index != -1) {
-                        peliculas[index] = peliculas[index].copy(
-                            esFavorita = !peliculas[index].esFavorita
-                        )
-                    }
-                }
+                onToggleFavorito = onToggleFavorito
             )
         }
     }
