@@ -14,37 +14,38 @@ El proyecto forma parte de la actividad práctica del módulo de *Programación 
 
 ## 📌 Características Principales
 
-- 🎨 **Interfaz Declarativa Moderna:** Diseñada íntegramente en **Jetpack Compose** siguiendo los lineamientos de **Material Design 3**.
+- 🎨 **Interfaz Declarativa Moderna:** Diseñada íntegramente en **Jetpack Compose** siguiendo las directrices de **Material Design 3**.
 - 🔀 **Navegación Modular:** Gestión del flujo de pantallas con `Jetpack Navigation Compose` y enrutamiento fuertemente tipado mediante la clase sellada `Ruta`.
 - 💾 **Persistencia de Datos SQLite:** Almacenamiento local mediante `SQLiteOpenHelper` (`damflix.db`) y operaciones asíncronas con Corrutinas de Kotlin en hilos en segundo plano (`Dispatchers.IO`).
-- 🏛️ **Arquitectura Robusta (MVVM + Repository):** Desacoplamiento de la lógica de negocio, persistencia y representación visual con reactividad a través de `StateFlow` y `collectAsStateWithLifecycle()`.
-- 👤 **Gestión de Perfil (`PerfilScreen`):** Muestra el avatar de usuario, nombre, rol de cinéfilo y métricas personales (películas vistas y reseñas redactadas).
-- 🎞️ **Catálogo Dinámico (`CatalogoScreen`):** Renderizado eficiente con `LazyColumn` y tarjetas `Card`. Permite consultar el listado de películas y marcar/desmarcar favoritas en tiempo real.
-- ✍️ **Registro de Películas (`FormularioScreen`):** Captura de datos con validación (`OutlinedTextField`, `Checkbox`), permitiendo introducir título, director, año de estreno e indicativo de si ha sido vista.
-- 📱 **Diseño Adaptativo Edge-to-Edge:** Experiencia inmersiva que aprovecha todo el espacio de pantalla en Android 10+.
+- 🏛️ **Arquitectura MVVM + Repository:** Desacoplamiento completo de responsabilidades, gestión del estado con `StateFlow` y recolección reactiva mediante `collectAsStateWithLifecycle()`.
+- 👤 **Gestión de Perfil (`PerfilScreen`):** Visualización del avatar de usuario, nombre, rol cinéfilo y métricas personales (películas vistas y reseñas).
+- 🎞️ **Catálogo Dinámico (`CatalogoScreen`):** Renderizado eficiente mediante `LazyColumn` y tarjetas `Card`. Permite explorar las películas y alternar el estado de favorita en tiempo real.
+- ✍️ **Registro de Películas (`FormularioScreen`):** Formulario con validación en tiempo real (`OutlinedTextField`, `Checkbox`), permitiendo registrar título, director, año de estreno e indicación de película vista.
+- 📱 **Soporte Edge-to-Edge:** Experiencia visual adaptada a pantallas completas e inmersivas en Android 10+.
 
 ---
 
 ## 🏗️ Arquitectura y Flujo de Datos
 
-La aplicación sigue los principios recomendados por Google para la arquitectura de aplicaciones Android:
+La aplicación está estructurada respetando la separación de capas recomendada por la guía oficial de arquitectura de Android:
 
 ```mermaid
 graph TD
-    UI[Jetpack Compose UI\n(MainScreen / Catalogo / Formulario / Perfil)] <-->|Observa StateFlow / Dispara Eventos| VM[PeliculaViewModel]
-    VM <-->|Corrutinas / Flow| Repo[PeliculaRepository]
+    UI[Capa de Presentación / UI\n(MainScreen / Catalogo / Formulario / Perfil)] <-->|Observa StateFlow / Notifica Eventos| VM[PeliculaViewModel\n(ui.viewmodel)]
+    VM <-->|Invocaciones Asíncronas| Repo[PeliculaRepository\n(data.repository)]
     Repo <-->|Operaciones SQL / Dispatchers.IO| DB[(SQLite Database\ndamflix.db)]
 ```
 
-1. **Capa de Datos:**
-   - `DAMFlixDbHelper`: Administra la creación y actualización de la base de datos `damflix.db` (Tabla `peliculas`).
-   - `PeliculaRepository`: Encapsula las consultas SQL (`obtenerTodas`, `insertar`, `actualizar`) aislándolas mediante `withContext(Dispatchers.IO)`.
-2. **Capa de Dominio / Presentación:**
-   - `Pelicula`: Modelo de datos (Data Class).
-   - `PeliculaViewModel`: Expone la lista de películas mediante `StateFlow<List<Pelicula>>` y reacciona a acciones de usuario (añadir película, conmutar favorito).
-3. **Capa de Interfaz de Usuario:**
-   - `MainScreen`: Scaffold principal que integra `CenterAlignedTopAppBar`, `BottomAppBar` y `NavHost`.
-   - `CatalogoScreen`, `FormularioScreen`, `PerfilScreen`: Composables reactivos que observan el estado.
+1. **Capa de Datos (`com.example.damflix.data`):**
+   - **Local (`data.local`):** `DAMFlixDbHelper` administra la creación y actualizaciones de la base de datos `damflix.db` (Tabla `peliculas`).
+   - **Repository (`data.repository`):** `PeliculaRepository` abstrae el acceso a la base de datos local y ejecuta consultas SQL asíncronas (`obtenerTodas`, `insertar`, `actualizar`) sobre `Dispatchers.IO`.
+   - **Model (`data.model`):** `Pelicula` data class que representa la entidad de datos del catálogo.
+
+2. **Capa de Presentación / UI (`com.example.damflix.ui`):**
+   - **ViewModel (`ui.viewmodel`):** `PeliculaViewModel` retiene y gestiona el estado de la UI exponiendo un `StateFlow<List<Pelicula>>`.
+   - **Navegación (`ui.navigation`):** `NavClass` define la clase sellada `Ruta` para gestionar el enrutamiento fuertemente tipado.
+   - **Pantallas (`ui.screens`):** Composables reactivos (`MainScreen`, `CatalogoScreen`, `FormularioScreen`, `PerfilScreen`).
+   - **Tema (`ui.theme`):** Configuración visual Material 3 (`Color.kt`, `Theme.kt`, `Type.kt`).
 
 ---
 
@@ -56,10 +57,10 @@ graph TD
 | **Jetpack Compose** | UI Toolkit declarativo moderno (`BOM 2026.02.01`) |
 | **Material Design 3** | Componentes de diseño (`Scaffold`, `CenterAlignedTopAppBar`, `BottomAppBar`, `Card`, `OutlinedTextField`, `Checkbox`, `Button`) |
 | **Navigation Compose** | Enrutamiento de navegación entre pantallas (`v2.10.2`) |
-| **Lifecycle & ViewModel Compose** | Gestión del ciclo de vida y estado (`v2.11.0` / `lifecycle-runtime-compose`) |
+| **Lifecycle & ViewModel Compose** | Gestión de estado y ciclo de vida (`v2.11.0` / `lifecycle-runtime-compose`) |
 | **SQLite** | Base de datos relacional integrada (`SQLiteOpenHelper`) |
-| **Kotlin Coroutines & Flow** | Concurrencia reactiva y trabajo asíncrono en segundo plano (`StateFlow`) |
-| **Gradle Version Catalog** | Gestión de dependencias con `libs.versions.toml` y Kotlin DSL |
+| **Kotlin Coroutines & Flow** | Concurrencia reactiva y operaciones asíncronas (`StateFlow`) |
+| **Gradle Version Catalog** | Gestión centralizada de dependencias con `libs.versions.toml` y Kotlin DSL |
 
 ---
 
@@ -84,17 +85,17 @@ DAMFlix/
 │       │   │   ├── MainActivity.kt       # Punto de entrada (Edge-to-Edge y DAMFlixTheme)
 │       │   │   ├── data/                 # Capa de Datos
 │       │   │   │   ├── local/
-│       │   │   │   │   └── DAMFlixDbHelper.kt # SQLiteOpenHelper (Base de datos damflix.db)
+│       │   │   │   │   └── DAMFlixDbHelper.kt # Helper SQLite (Base de datos damflix.db)
 │       │   │   │   ├── model/
-│       │   │   │   │   └── Pelicula.kt       # Modelo de datos (Data Class)
+│       │   │   │   │   └── Pelicula.kt       # Entidad de modelo (Data Class)
 │       │   │   │   └── repository/
 │       │   │       └── PeliculaRepository.kt # Acceso asíncrono a datos
-│       │   │   └── ui/                   # Capa de Interfaz de Usuario (Presentación)
+│       │   │   └── ui/                   # Capa de Interfaz de Usuario / Presentación
 │       │   │       ├── navigation/
-│       │   │       │   └── NavClass.kt       # Definición de rutas (Sealed Class)
+│       │   │       │   └── NavClass.kt       # Rutas de navegación (Sealed Class)
 │       │   │       ├── screens/
-│       │   │       │   ├── MainScreen.kt     # Pantalla contenedora (Scaffold, TopBar, BottomBar, NavHost)
-│       │   │       │   ├── CatalogoScreen.kt # Vista de catálogo de películas (LazyColumn, Card, Favoritos)
+│       │   │       │   ├── MainScreen.kt     # Contenedor principal (Scaffold, TopBar, BottomBar, NavHost)
+│       │   │       │   ├── CatalogoScreen.kt # Vista de catálogo (LazyColumn, Card, Favoritos)
 │       │   │       │   ├── FormularioScreen.kt # Vista de formulario para registrar películas
 │       │   │       │   └── PerfilScreen.kt   # Vista de perfil de usuario y métricas
 │       │   │       ├── theme/            # Tema Material 3
@@ -102,12 +103,12 @@ DAMFlix/
 │       │   │       │   ├── Theme.kt
 │       │   │       │   └── Type.kt
 │       │   │       └── viewmodel/
-│       │   │           └── PeliculaViewModel.kt # ViewModel con StateFlow para la gestión del estado
-│       │   ├── res/                      # Recursos (Imágenes, Strings, Colores, Iconos)
+│       │   │           └── PeliculaViewModel.kt # ViewModel con StateFlow para gestión de estado
+│       │   ├── res/                      # Recursos estáticos (Imágenes, Strings, Colores, Iconos)
 │       │   └── AndroidManifest.xml       # Manifiesto de la aplicación Android
 ├── gradle/
 │   └── libs.versions.toml               # Catálogo centralizado de versiones y dependencias
-├── build.gradle.kts                     # Gradle build root script
+├── build.gradle.kts                     # Gradle build script de nivel raíz
 └── README.md                            # Documentación completa del proyecto
 ```
 
@@ -130,14 +131,14 @@ DAMFlix/
    ```
 
 2. **Abrir en Android Studio:**
-   - Abre Android Studio y pulsa en `Open an Existing Project`.
+   - Abre Android Studio y selecciona `Open an Existing Project`.
    - Selecciona la carpeta `DAMFlix`.
 
 3. **Sincronizar Gradle:**
-   - Haz clic en `Sync Project with Gradle Files` para descargar dependencias.
+   - Pulsa en `Sync Project with Gradle Files` para descargar las dependencias.
 
 4. **Ejecutar la Aplicación:**
-   - Elige el emulador o dispositivo conectado.
+   - Selecciona un emulador o dispositivo físico conectado.
    - Presiona `Run` `(Shift + F10)` o el botón `▶`.
 
 ---
