@@ -1,57 +1,54 @@
-package com.example.damflix
+package com.example.damflix.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.navigation.compose.rememberNavController
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.damflix.R
+import com.example.damflix.data.local.DAMFlixDbHelper
+import com.example.damflix.data.repository.PeliculaRepository
+import com.example.damflix.ui.navigation.Ruta
+import com.example.damflix.ui.viewmodel.PeliculaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+    val context = LocalContext.current
 
-    val peliculas = remember {
-        mutableStateListOf(
-            Pelicula(
-                id = 1,
-                titulo = "Pelicula",
-                director = "Director",
-                anio = 2023,
-                esFavorita = false
-            )
-        )
-    }
+    val dbHelper = remember { DAMFlixDbHelper(context) }
+    val repository = remember { PeliculaRepository(dbHelper) }
+    val viewModel = remember { PeliculaViewModel(repository) }
 
     Scaffold(
 
@@ -143,8 +140,8 @@ fun MainScreen() {
             }
             composable(Ruta.Formulario.path) {
                 FormularioScreen(
-                    onGuardarPelicula = { nuevaPelicula ->
-                        peliculas.add(nuevaPelicula)
+                    viewModel = viewModel,
+                    onGuardarPelicula = {
                         navController.navigate(Ruta.Catalogo.path)
                     },
                     onVolver = {
@@ -154,71 +151,15 @@ fun MainScreen() {
             }
             composable(Ruta.Catalogo.path) {
                 CatalogoScreen(
-                    peliculas = peliculas,
+                    viewModel = viewModel,
                     onToggleFavorito = { peliculaId ->
-                        val index = peliculas.indexOfFirst { it.id == peliculaId }
-                        if (index != -1) {
-                            peliculas[index] = peliculas[index].copy(
-                                esFavorita = !peliculas[index].esFavorita
-                            )
+                        val pelicula = viewModel.listaPeliculas.value.find { it.id == peliculaId }
+                        if (pelicula != null) {
+                            viewModel.conmutarFavorito(pelicula)
                         }
                     }
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun PerfilScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.avatar),
-            contentDescription = "Perfil",
-            modifier = Modifier
-                .padding(top = 100.dp, bottom = 20.dp)
-                .size(100.dp)
-                .clip(CircleShape)
-                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
-        )
-
-        Text(
-            modifier = Modifier
-                .padding(bottom = 10.dp),
-            text = stringResource(id = R.string.userName),
-            style = MaterialTheme.typography.headlineSmall
-        )
-
-        Text(
-            modifier = Modifier
-                .padding(bottom = 50.dp),
-            text = stringResource(id = R.string.rol),
-            style = MaterialTheme.typography.bodyMedium
-        )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 25.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-
-            Text(
-                text = "Vistas: " + stringResource(id = R.string.peliculas),
-                modifier = Modifier
-                    .padding(start = 30.dp)
-            )
-
-            Text(
-                text = "Reseñas: " + stringResource(id = R.string.reseñas),
-                modifier = Modifier
-                    .padding(end = 30.dp)
-            )
         }
     }
 }
