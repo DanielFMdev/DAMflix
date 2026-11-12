@@ -30,19 +30,24 @@ import com.example.damflix.ui.viewmodel.PeliculaViewModel
 @Composable
 fun CatalogoScreen(
     viewModel: PeliculaViewModel,
-    onToggleFavorito: (Int) -> Unit
+    onToggleFavorito: (Int) -> Unit,
+    onPeliculaClick: (Int) -> Unit,
 ) {
-    Scaffold() { innerPadding ->
+    Scaffold { innerPadding ->
         Box(
             modifier = Modifier.padding(innerPadding)
         ) {
-            ListaPeliculas(viewModel, onToggleFavorito)
+            ListaPeliculas(viewModel, onToggleFavorito, onPeliculaClick)
         }
     }
 }
 
 @Composable
-fun ListaPeliculas(viewModel: PeliculaViewModel, onToggleFavorito: (Int) -> Unit) {
+fun ListaPeliculas(
+    viewModel: PeliculaViewModel,
+    onToggleFavorito: (Int) -> Unit,
+    onPeliculaClick: (Int) -> Unit
+) {
 
     val peliculas by viewModel.listaPeliculas.collectAsStateWithLifecycle()
 
@@ -51,7 +56,10 @@ fun ListaPeliculas(viewModel: PeliculaViewModel, onToggleFavorito: (Int) -> Unit
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(items = peliculas, key = { p -> p.id }) { pelicula ->
-            Card(modifier = Modifier.fillMaxWidth()) {
+            Card(
+                onClick = { onPeliculaClick(pelicula.id) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Row(
                     modifier = Modifier.padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically

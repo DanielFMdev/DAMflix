@@ -11,7 +11,12 @@
     <string name="tituloPelicula">Título</string>
     <string name="directorPelicula">Director/a</string>
     <string name="anioPelicula">Año de la película</string>
-    <string name="peliculaVista">Pelicula vista</string>
+    <string name="peliculaVista">Estado: Pelicula vista</string>
+    <string name="peliculaPendiente">Estado: Pelicula pendiente de ver</string>
     <string name="btnGuardar">Guardar película</string>
     <string name="btnVolver">Volver</string>
+
+    <string name="msjError">No se ha encontrado la pelicula</string>
+    <string name="volverCatalogo">Volver al catálogo</string>
+    <string name="cargarDatos">Cargando datos...</string>
 </resources>

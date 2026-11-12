@@ -10,6 +10,10 @@ class PeliculaRepository(private val dao: PeliculaDao) {
 
     val todasPeliculas: Flow<List<PeliculaEntity>> = dao.obtenerTodas()
 
+    suspend fun obtenerPorId(id: Int): PeliculaEntity? {
+        return dao.obtenerPorId(id)
+    }
+
     suspend fun insertar(pelicula: PeliculaEntity) {
         dao.insertar(pelicula)
     }

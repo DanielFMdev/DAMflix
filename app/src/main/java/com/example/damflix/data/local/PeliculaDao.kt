@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PeliculaDao {
     @Query("SELECT * FROM peliculas WHERE id = :id")
-    fun obtenerPorId(id: Int): Flow<PeliculaEntity>
+    suspend fun obtenerPorId(id: Int): PeliculaEntity?
 
     @Query("SELECT * FROM peliculas ORDER BY id DESC")
     fun obtenerTodas(): Flow<List<PeliculaEntity>>

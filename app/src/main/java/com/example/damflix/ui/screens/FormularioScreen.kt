@@ -39,7 +39,7 @@ fun FormularioScreen(
     var anio by remember { mutableStateOf("") }
     var esVista by remember { mutableStateOf(false) }
 
-    Scaffold() { innerPadding ->
+    Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

@@ -1,9 +1,10 @@
 package com.example.damflix.ui.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Ruta(val path: String, val label: String, val icon: ImageVector) {
@@ -22,6 +23,14 @@ sealed class Ruta(val path: String, val label: String, val icon: ImageVector) {
     object Catalogo: Ruta(
         path = "catalogo",
         label = "Catalogo",
-        icon = Icons.Default.List
+        icon = Icons.AutoMirrored.Filled.List
     )
+
+    object Detalle: Ruta(
+        path = "detalle/{peliculaId}",
+        label = "Detalle",
+        icon = Icons.Filled.Search
+    ) {
+        fun crearRuta(peliculaId: Int) = "detalle/$peliculaId"
+    }
 }
